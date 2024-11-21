@@ -1,5 +1,5 @@
 import js from '@eslint/js'
-import pluginVue, { rules } from 'eslint-plugin-vue'
+import pluginVue from 'eslint-plugin-vue'
 import skipFormatting from '@vue/eslint-config-prettier/skip-formatting'
 
 export default [
@@ -16,11 +16,4 @@ export default [
   js.configs.recommended,
   ...pluginVue.configs['flat/essential'],
   skipFormatting,
-  {
-    eslintConfig: {
-      rules: {
-        'no-unused-vars': 'off',
-      },
-    },
-  },
 ]

@@ -4,45 +4,46 @@ import http from '@/utils/http'
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null,
-    authenticated: false,
+    isAuthenticated: false,
   }),
 
   actions: {
-    setUser(user) {
-      this.user = user
-      this.authenticated = !!user
-    },
-
-    clearUser() {
-      this.user = null
-      this.authenticated = false
-    },
-
-    async getUser() {
+    async getLoggedInUser() {
       try {
-        const response = await http.get('/user')
-        this.setUser(response.data)
+        const response = await http.get('/api/user')
+        this.user = response.data
+        this.isAuthenticated = !!this.user
       } catch (error) {
-        this.clearUser()
+        this.user = null
+        this.isAuthenticated = false
       }
     },
-
-    async login(credentials) {
+    async login(credential) {
       try {
-        await http.get('/sanctum/csrf-cookie')
-        const response = await http.post('/login', credentials)
-        this.setUser(response.data)
+        const response = await http.post('/login', credential)
+        this.user = response.data
+        this.isAuthenticated = !!this.user
       } catch (error) {
-        this.clearUser()
+        throw error ? error.response : error
       }
     },
-
+    async register(credential) {
+      try {
+        const response = await http.post('/register', credential)
+        this.user = response.data
+        this.isAuthenticated = !!this.user
+      } catch (error) {
+        throw error ? error.response : error
+      }
+    },
     async logout() {
       try {
         await http.post('/logout')
-        this.clearUser()
       } catch (error) {
-        this.clearUser()
+        throw error ? error.response : error
+      } finally {
+        this.user = null
+        this.isAuthenticated = false
       }
     },
   },

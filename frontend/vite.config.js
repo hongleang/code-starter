@@ -13,6 +13,6 @@ export default defineConfig({
     },
   },
   server: {
-    port: parseInt(import.meta.VITE_FRONTEND_PORT) || 3000,
+    port: 3000,
   },
 })
